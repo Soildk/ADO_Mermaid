@@ -121,11 +121,79 @@ Optional, in `.vscode/settings.json`, so Copilot can self-check without promptin
 
 ## Use
 
-`copilot-instructions.md` applies automatically to all `.md` files. For diagram work:
+`copilot-instructions.md` applies automatically to every `.md` file — you get the ADO rules
+even when you never mention the skill. Invoke the skill explicitly with `/ado-wiki-mermaid`
+when you want the full workflow: diagram-type check, guide lookup, and validation.
+
+All examples below are in **Agent mode**, which the skill requires.
+
+### Creating a diagram
 
 ```
 /ado-wiki-mermaid draw the runtime architecture for this service
+/ado-wiki-mermaid sequence diagram for the OAuth login flow, from browser to IdP to API
+/ado-wiki-mermaid state diagram for the order lifecycle in OrderStatus.cs
+/ado-wiki-mermaid flowchart of the nightly reconciliation job, from the scheduler entry point
+/ado-wiki-mermaid gantt chart for the Q3 migration phases in this planning page
 ```
+
+Ask for the diagram *from a source* — a file, a folder, a class — rather than from memory.
+The skill is instructed to derive nodes from real code and not invent components.
+
+### Fixing a diagram that does not render
+
+The most common reason to reach for the skill. Paste the broken block, or point at the page:
+
+```
+/ado-wiki-mermaid this diagram shows as a grey code block in our wiki, fix it
+/ado-wiki-mermaid this renders on GitHub but is blank in Azure DevOps — why?
+/ado-wiki-mermaid the arrows render but all the labels are invisible in dark mode
+/ado-wiki-mermaid fix every Mermaid block in docs/Architecture.md for Azure DevOps
+```
+
+### Migrating existing content
+
+```
+/ado-wiki-mermaid convert every ```mermaid fence in this folder to the ::: mermaid fence
+/ado-wiki-mermaid this page uses erDiagram — rewrite it as something ADO can render
+/ado-wiki-mermaid this C4Context diagram is empty in the wiki, give me a flowchart equivalent
+/ado-wiki-mermaid split this 40-node diagram into a parent page and subpages
+```
+
+`erDiagram`, `gitGraph`, and the C4 family are the three that bite hardest — they are valid
+Mermaid, they render on GitHub, and Azure DevOps shows nothing. The skill carries
+copy-ready flowchart substitutes for each.
+
+### Reviewing before publishing
+
+```
+/ado-wiki-mermaid review this page for Azure DevOps wiki compatibility
+/ado-wiki-mermaid run the validator on docs/ and fix everything it reports
+/ado-wiki-mermaid is stateDiagram-v2 supported in our wiki?
+```
+
+### Page structure, not just diagrams
+
+The skill also carries the ADO wiki conventions — `.order` files, `.attachments` paths,
+root-relative page links, `[[_TOC_]]`:
+
+```
+/ado-wiki-mermaid why is my subpage not showing in the wiki tree?
+/ado-wiki-mermaid my screenshot link is broken after moving the page — fix the path
+/ado-wiki-mermaid restructure this long page into a parent with subpages
+```
+
+### Without invoking the skill
+
+Because `copilot-instructions.md` is always on, ordinary requests already follow the rules:
+
+```
+add a diagram of the payment flow to this page
+document this module for the wiki
+```
+
+Use `/ado-wiki-mermaid` when you want the diagram-type check and the validation step
+performed explicitly — on anything you are about to publish, it is worth the extra keystrokes.
 
 ---
 
