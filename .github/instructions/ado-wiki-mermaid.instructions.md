@@ -1,9 +1,14 @@
 ---
 description: 'Azure DevOps wiki Markdown and Mermaid conventions'
-applyTo: '**/*.md'
+applyTo: '**/wiki/**/*.md, **/docs/**/*.md'
 ---
 
 # Azure DevOps Wiki Conventions
+
+> **Scope:** these rules apply only to Markdown destined for the Azure DevOps project wiki.
+> Adjust the `applyTo` glob above to match where your wiki content actually lives — use
+> `'**/*.md'` if the whole repository is wiki content, or add your own paths.
+> They do not replace your repository-wide `.github/copilot-instructions.md`.
 
 Our documentation lives in an Azure DevOps project wiki. Apply these rules to any Markdown
 intended for that wiki.

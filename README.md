@@ -23,7 +23,7 @@ This project is **not** written from scratch. It is a retarget of existing commu
 
 ### Secondary sources (consulted, no code taken)
 
-- **[github/awesome-copilot](https://github.com/github/awesome-copilot)** (MIT) — surveyed all 449 skills and 226 instruction files. It contains **no** Mermaid skill; `draw-io-diagram-generator` and `excalidraw-diagram-generator` are unsuitable for Azure DevOps. Its `markdown-gfm.instructions.md` and `documentation-writer` (Diátaxis) skills informed the structure of `copilot-instructions.md`, but no text was copied.
+- **[github/awesome-copilot](https://github.com/github/awesome-copilot)** (MIT) — surveyed all 449 skills and 226 instruction files. It contains **no** Mermaid skill; `draw-io-diagram-generator` and `excalidraw-diagram-generator` are unsuitable for Azure DevOps. Its `markdown-gfm.instructions.md` and `documentation-writer` (Diátaxis) skills informed the structure of the instructions file, but no text was copied.
 - **[softaworks/agent-toolkit](https://github.com/softaworks/agent-toolkit)** — `mermaid-diagrams` skill (~4,800 installs). Evaluated and not used: broad syntax reference with no publishing-target awareness and no validation tooling.
 - **Microsoft Learn** — the authoritative constraints. See [Sources](#sources).
 
@@ -69,7 +69,7 @@ Per [Microsoft Learn](https://learn.microsoft.com/en-us/azure/devops/project/wik
 | `.github/skills/ado-wiki-mermaid/SKILL.md` | **Original** | Written for this project. Retains upstream's *authoring philosophy* (node budget, reserved words, `classDef` contrast, derive-from-reality) with attribution; all fence, version-gate, and diagram-type rules are ADO-specific and new. |
 | `.github/skills/ado-wiki-mermaid/references/ado-wiki-reference.md` | **Original** | Written for this project. ADO constraints, escaping table, theming, ER/C4 substitute patterns, troubleshooting, `.order`/`.attachments` mechanics. |
 | `.github/skills/ado-wiki-mermaid/scripts/validate_ado_mermaid.py` | **Original** | Written for this project. Python 3 stdlib only. Upstream ships `resilient_diagram.py`, which validates via `mmdc` (Mermaid CLI) against *modern* Mermaid — that validates the wrong thing for ADO, so it was **not** carried over. |
-| `.github/copilot-instructions.md` | **Original** | Written for this project. |
+| `.github/instructions/ado-wiki-mermaid.instructions.md` | **Original** | Written for this project. Scoped via `applyTo` so it does not collide with an existing repo-wide `copilot-instructions.md`. |
 | `references/upstream-guides/**` (8 files) | **Upstream, modified** | Copied verbatim from `design-doc-mermaid/references/guides/`, then each file received a prepended warning header marking it as GitHub-targeted and directing the reader to the ADO files on any conflict. Content otherwise unaltered. |
 | `references/templates/**` (5 files) | **Upstream, modified** | Copied verbatim from `design-doc-mermaid/assets/`, with a one-line conversion notice prepended. Content otherwise unaltered. |
 | `references/guides/wiki-ticket-and-github.md` | **Upstream, removed** | Deleted. It is the GitHub/Confluence/PlantUML publishing guide — precisely the file whose advice is wrong for Azure DevOps. |
@@ -83,7 +83,8 @@ Per [Microsoft Learn](https://learn.microsoft.com/en-us/azure/devops/project/wik
 
 ```
 .github/
-├── copilot-instructions.md            # always-on, applies to every .md
+├── instructions/
+│   └── ado-wiki-mermaid.instructions.md   # auto-applied to wiki .md files only
 └── skills/ado-wiki-mermaid/
     ├── SKILL.md                       # loaded on demand by Copilot
     ├── references/
@@ -100,10 +101,33 @@ Per [Microsoft Learn](https://learn.microsoft.com/en-us/azure/devops/project/wik
 
 Copy the `.github/` folder into your repository. No npm, no pip, no build step. Python 3 is needed only to run the validator.
 
-In VS Code:
+**It will not clash with an existing `.github/copilot-instructions.md`.** These rules ship as a *scoped* instructions file — `.github/instructions/ado-wiki-mermaid.instructions.md` — which is a separate mechanism from the repo-wide instructions file. Both load; neither overwrites the other.
+
+| File | Scope | Loads |
+|---|---|---|
+| `.github/copilot-instructions.md` | whole repo | always, every request |
+| `.github/instructions/*.instructions.md` | `applyTo` glob | only for matching files |
+
+### Set the scope
+
+The shipped glob assumes wiki content lives under `wiki/` or `docs/`:
+
+```yaml
+---
+description: 'Azure DevOps wiki Markdown and Mermaid conventions'
+applyTo: '**/wiki/**/*.md, **/docs/**/*.md'
+---
+```
+
+Edit `applyTo` to match your layout — `'**/*.md'` if the whole repository is wiki content. Without a matching `applyTo`, the file never auto-applies.
+
+Then in VS Code:
 
 1. Reload window (`Ctrl+Shift+P` → *Developer: Reload Window*)
 2. Copilot Chat → **Configure Skills** → confirm `ado-wiki-mermaid` is enabled
+3. Open a wiki `.md`, ask anything, and check the response's **References** section — the instructions file should be listed
+
+> If it does not appear: confirm `chat.instructionsFilesLocations` includes `.github/instructions` (the default) and that `chat.includeApplyingInstructions` is enabled.
 
 Optional, in `.vscode/settings.json`, so Copilot can self-check without prompting:
 
@@ -121,8 +145,8 @@ Optional, in `.vscode/settings.json`, so Copilot can self-check without promptin
 
 ## Use
 
-`copilot-instructions.md` applies automatically to every `.md` file — you get the ADO rules
-even when you never mention the skill. Invoke the skill explicitly with `/ado-wiki-mermaid`
+The instructions file applies automatically to any Markdown matching its `applyTo` glob — you
+get the ADO rules even when you never mention the skill. Invoke the skill explicitly with `/ado-wiki-mermaid`
 when you want the full workflow: diagram-type check, guide lookup, and validation.
 
 All examples below are in **Agent mode**, which the skill requires.
@@ -185,7 +209,7 @@ root-relative page links, `[[_TOC_]]`:
 
 ### Without invoking the skill
 
-Because `copilot-instructions.md` is always on, ordinary requests already follow the rules:
+Because the instructions file auto-applies to matching files, ordinary requests already follow the rules:
 
 ```
 add a diagram of the payment flow to this page
