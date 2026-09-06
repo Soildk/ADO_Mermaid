@@ -1,0 +1,121 @@
+NOTICE
+======
+
+ADO_Mermaid
+Copyright (c) 2026 Frank Larsen (github.com/soildk)
+
+This product includes software and documentation developed by third parties.
+The list below records, file by file, what was taken, from whom, and how it
+was modified.
+
+--------------------------------------------------------------------------
+1. design-doc-mermaid ("Mermaid Architect")
+--------------------------------------------------------------------------
+
+Author:      Rick Hightower (github.com/RichardHightower)
+Organisation: Spillwave Solutions (github.com/SpillwaveSolutions)
+Source:      https://github.com/SpillwaveSolutions/design-doc-mermaid
+Referenced:  main branch, commit c36d835 (2026-08-24)
+License:     MIT, as declared by the author in the upstream README.md
+             ("Part of Claude Code Skills - MIT License") and in
+             .claude-plugin/plugin.json ("license": "MIT").
+
+             NOTE: the upstream repository does not currently contain a
+             LICENSE file, and the GitHub API reports "license": null.
+             The MIT designation above rests on the author's own README
+             and plugin manifest. Anyone redistributing this work
+             commercially should confirm terms with the author.
+
+Files derived from this source, retained with modification:
+
+  .github/skills/ado-wiki-mermaid/references/upstream-guides/
+      code-to-diagram/README.md
+      diagrams/activity-diagrams.md
+      diagrams/architecture-diagrams.md
+      diagrams/deployment-diagrams.md
+      diagrams/sequence-diagrams.md
+      resilient-workflow.md
+      troubleshooting.md
+      unicode-symbols/guide.md
+
+      Origin:       upstream references/guides/
+      Modification: content copied verbatim; a warning header was
+                    prepended to each file identifying it as targeting
+                    GitHub / modern Mermaid, and directing the reader to
+                    the Azure DevOps files on any conflict. No other
+                    edits were made.
+
+  .github/skills/ado-wiki-mermaid/references/templates/
+      api-design-template.md
+      architecture-design-template.md
+      database-design-template.md
+      feature-design-template.md
+      system-design-template.md
+
+      Origin:       upstream assets/
+      Modification: content copied verbatim; a one-line fence-conversion
+                    notice was prepended to each file. No other edits.
+
+Files from this source deliberately NOT included:
+
+  references/guides/wiki-ticket-and-github.md
+      Removed. It is the GitHub/Confluence/PlantUML publishing guide;
+      its advice is specifically wrong for Azure DevOps wikis.
+
+  scripts/resilient_diagram.py
+  scripts/mermaid_to_image.py
+  scripts/extract_mermaid.py
+      Removed. These depend on the Mermaid CLI (mmdc, via npm) and
+      validate against modern Mermaid, which is not what Azure DevOps
+      renders. Replaced by scripts/validate_ado_mermaid.py, which is
+      original work.
+
+Conceptual debt, not code:
+
+  The authoring philosophy in SKILL.md -- node budgets, escaping reserved
+  words, requiring colour contrast on classDef, deriving diagrams from
+  real code rather than invention -- originates with this upstream skill.
+  The text expressing it in SKILL.md is original, but the ideas are
+  Rick Hightower's and are acknowledged as such.
+
+--------------------------------------------------------------------------
+2. github/awesome-copilot
+--------------------------------------------------------------------------
+
+Source:  https://github.com/github/awesome-copilot
+License: MIT
+
+No files were copied. The repository's markdown instruction files
+(markdown-gfm.instructions.md) and its documentation-writer skill
+informed the structure and tone of .github/copilot-instructions.md.
+All text is original.
+
+--------------------------------------------------------------------------
+3. softaworks/agent-toolkit
+--------------------------------------------------------------------------
+
+Source: https://github.com/softaworks/agent-toolkit
+
+Evaluated during research and not used. No files copied. Recorded here
+for transparency about what was considered.
+
+--------------------------------------------------------------------------
+4. Microsoft documentation
+--------------------------------------------------------------------------
+
+Azure DevOps behaviour documented in this project (the Mermaid 8.13.9
+version pin, the supported diagram-type list, the ::: mermaid container
+fence, and the absence of JavaScript/iframe support) was verified against
+Microsoft Learn:
+
+  https://learn.microsoft.com/en-us/azure/devops/project/wiki/markdown-guidance
+  https://learn.microsoft.com/en-us/azure/devops/release-notes/2022/wiki/sprint-200-update
+
+Microsoft documentation is quoted briefly for identification and accuracy.
+No Microsoft content is redistributed here.
+
+--------------------------------------------------------------------------
+
+Original work in this repository -- SKILL.md, ado-wiki-reference.md,
+validate_ado_mermaid.py, and copilot-instructions.md -- is licensed under
+the MIT License in LICENSE.
