@@ -129,6 +129,38 @@ Then in VS Code:
 
 > If it does not appear: confirm `chat.instructionsFilesLocations` includes `.github/instructions` (the default) and that `chat.includeApplyingInstructions` is enabled.
 
+### Composing with a project-investigation skill
+
+This skill only answers *how a diagram should be drawn* — the fence, the supported diagram
+types, and the 8.13.9 rendering constraints. It deliberately has no opinion on *what* the
+diagram should show or how the model should go find that out.
+
+If a diagram is being generated as part of a larger documentation flow (e.g. a
+`create-project-documentation-wiki.prompt.md`-style skill that reads a README, source tree,
+and pipeline files to build up an architecture picture), keep that investigation logic in its
+own instructions file — do not duplicate diagram syntax rules there. Instead have it defer to
+this skill for the "how", something like:
+
+```markdown
+## Diagram Rules
+- When a documentation task requires a diagram, follow the `ado-wiki-mermaid` skill/instructions
+  for syntax, fence, supported diagram types, and the Azure DevOps 8.13.9 constraint set.
+- Arrange flow diagrams to show source -> transformation -> destination; prefer `flowchart LR`/`TD`.
+- Before finalizing, run `validate_ado_mermaid.py` on the generated file if the skill is
+  installed in this workspace.
+```
+
+Two things to check when composing the two:
+
+1. **`applyTo` must actually match where the generated file lands.** If the investigation
+   skill writes e.g. `DOCUMENTATION_WIKI.md` to a project root rather than under `wiki/` or
+   `docs/`, the shipped glob above will never match it and these rules silently won't load.
+   Widen it: `applyTo: '**/wiki/**/*.md, **/docs/**/*.md, **/DOCUMENTATION_WIKI.md'`.
+2. **Don't hardcode fence/syntax details in the investigation skill's own instructions.**
+   A duplicated copy of the `::: mermaid` rule (or worse, a partial one) drifts from this
+   skill's rules over time and reintroduces exactly the silently-broken-diagram problem this
+   skill exists to prevent. Point at this skill instead of restating its rules.
+
 Optional, in `.vscode/settings.json`, so Copilot can self-check without prompting:
 
 ```json
